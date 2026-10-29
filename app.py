@@ -4,18 +4,15 @@ import streamlit as st
 
 # Configure page layout
 st.set_page_config(
-    page_title="Global Literacy & Socioeconomic Dashboard",
-    page_icon="🌍",
+    page_title="Global Literacy and Socioeconomic Dashboard",
     layout="wide",
 )
 
-# --- 1. DATA LOADING & CACHING ---
+# --- 1. DATA LOADING AND CACHING ---
 @st.cache_data
 def load_data():
-    # Publicly accessible clean dataset combining country metrics and literacy rates
     url = "https://raw.githubusercontent.com/owid/owid-datasets/master/datasets/Literacy%20rates%20-%20CIA%20World%20Factbook/Literacy%20rates%20-%20CIA%20World%20Factbook.csv"
     df = pd.read_csv(url)
-    # Clean column names for easier handling
     df.columns = [col.strip() for col in df.columns]
     return df
 
@@ -26,11 +23,11 @@ except Exception as e:
     st.stop()
 
 # --- 2. SIDEBAR CONFIGURATION (INTERACTIVE WIDGETS) ---
-st.sidebar.header("🎛️ Dashboard Controls")
+st.sidebar.header("Dashboard Controls")
 
-st.sidebar.markdown("""
-Use the controls below to filter countries and customize the visualization parameters.
-""")
+st.sidebar.markdown(
+    "Use the controls below to filter countries and customize visualization parameters."
+)
 
 # Widget 1: Slider for minimum literacy rate threshold
 min_literacy = st.sidebar.slider(
@@ -48,19 +45,19 @@ filtered_df = df[df[df.columns[1]] >= min_literacy].dropna(subset=[df.columns[1]
 show_raw_data = st.sidebar.checkbox("Show Raw Data Table", value=False)
 
 
-# --- 3. MAIN APP LAYOUT & SECTIONS ---
+# --- 3. MAIN APP LAYOUT AND SECTIONS ---
 
 # Section 1: Overview
-st.title("🌍 Global Literacy & Socioeconomic Insights")
+st.title("Global Literacy and Socioeconomic Insights")
 st.markdown("""
-Welcome to the **Global Literacy Dashboard**. This interactive web application investigates global literacy rates across different countries and regions. 
+Welcome to the Global Literacy Dashboard. This interactive web application investigates global literacy rates across different countries and regions. 
 Use this platform to examine disparities, analyze distributions, and uncover developmental trends worldwide.
 """)
 
 st.divider()
 
-# Section 2: Data Display & Metrics
-st.header("📊 Dataset Overview & Summary Metrics")
+# Section 2: Data Display and Summary Metrics
+st.header("Dataset Overview and Summary Metrics")
 
 col1, col2, col3 = st.columns(3)
 with col1:
@@ -78,13 +75,13 @@ if show_raw_data:
 st.divider()
 
 # Section 3: Interactive Visualizations (Plotly)
-st.header("📈 Interactive Data Visualizations")
+st.header("Interactive Data Visualizations")
 
 st.markdown("""
-The chart below illustrates the distribution of literacy rates across countries. You can hover over individual data points or bars to inspect specific national statistics.
+The chart below illustrates the distribution of literacy rates across countries. You can hover over individual bars to inspect specific national statistics.
 """)
 
-# Plotly Visualization: Bar/Scatter chart
+# Plotly Visualization: Bar chart with proper axes, title, and legend
 fig = px.bar(
     filtered_df.sort_values(by=filtered_df.columns[1], ascending=False).head(30),
     x=filtered_df.columns[0],
@@ -105,10 +102,12 @@ st.plotly_chart(fig, use_container_width=True)
 
 st.divider()
 
-# Section 4: Key Insights & Takeaways
-st.header("💡 Key Insights")
+# Section 4: Key Insights
+st.header("Key Insights")
 st.markdown("""
 * **Regional Disparities:** Significant gaps persist between developed economies and developing regions regarding baseline educational access.
 * **Data-Driven Policy:** Tracking metrics like literacy rates allows international organizations and educational planners to target funding and literacy initiatives where they are most needed.
 * **Interactive Exploration:** Adjusting the sidebar threshold instantly updates the dataset view, demonstrating reactive state management in Streamlit.
 """)
+   
+
